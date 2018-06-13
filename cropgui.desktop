@@ -1,13 +1,11 @@
 [Desktop Entry]
-Encoding=UTF-8
-Version=
 Type=Application
 Exec=/usr/bin/cropgui
 Icon=cropgui
 X-GNOME-DocPath=
 Terminal=false
 Name=Crop Photos
-Comment=Losslessly Crop JPEG Images
+Comment=Losslessly Crop JPEG and other images.
 StartupNotify=false
-Categories=Application;Graphics;2DGraphics;RasterGraphics;GTK;
-MimeType=image/jpeg
+Categories=Graphics;2DGraphics;RasterGraphics;GTK;
+MimeType=image/*;

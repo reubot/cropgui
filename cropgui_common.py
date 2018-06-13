@@ -80,14 +80,14 @@ class CropTask(object):
             task = self.tasks.get()
             if task is None:
                 break
-            args, target_name = task
-            shortname = os.path.basename(target_name)
-            target = open(target_name, "w")
-            self.log.progress(_("Cropping to %s") % shortname)
-            subprocess.call(args, stdout=target)
-            subprocess.call(["jpegexiforient", "-1", target_name])
+            command, target = task
+            shortname = os.path.basename(target)
+            self.log.log(_("Cropping to %s") % shortname)
+            subprocess.call(command)
+            if command[1]=="jpegtran":
+                self.log.log(_("Setting exif orientation of %s") % shortname)
+                subprocess.call(["jpegexiforient", "-1", target])
             self.log.log(_("Cropped to %s") % shortname)
-            target.close()
 
 class DragManagerBase(object):
     def __init__(self):
@@ -139,7 +139,7 @@ class DragManagerBase(object):
         b = clamp(b, 0, lim)
         a = (a / self.round)*self.round
         b = (b / self.round)*self.round
-        return int(a), int(b)
+        return int(a+0.5), int(b+0.5)
 
     def get_corners(self):
         return self.top, self.left, self.right, self.bottom
@@ -320,6 +320,7 @@ class DragManagerBase(object):
         self.state = DRAG_NONE
 
     def rotate_ccw(self):
+        self.w, self.h = self.h, self.w
         r = self.rotation
         if   r == 1: r = 8
         elif r == 8: r = 3
@@ -328,6 +329,7 @@ class DragManagerBase(object):
         self.rotation = r
 
     def rotate_cw(self):
+        self.w, self.h = self.h, self.w
         r = self.rotation
         if   r == 1: r = 6
         elif r == 6: r = 3
